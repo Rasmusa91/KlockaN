@@ -1,4 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,10 +9,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.superteam.klockan.TabTime">
 
-    <TextView
-        android:id="@+id/section_label"
+    <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text = "Timeee"/>
+        app:srcCompat="@drawable/icon_plus"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/addTime" />
+
+    <ListView
+        android:id="@+id/timeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/addTime" />
 
 </RelativeLayout>
