@@ -17,8 +17,8 @@ import java.util.ArrayList;
 
 public class TabTime extends Fragment
 {
-    private ArrayList<String> m_Items;
-    private ArrayAdapter<String> m_Adapter;
+    private ArrayList<TimeObject> m_Items;
+    private ArrayAdapter<TimeObject> m_Adapter;
     private View m_View;
 
     @Override
@@ -39,8 +39,8 @@ public class TabTime extends Fragment
 
     private void initialize()
     {
-        m_Items = new ArrayList<String>();
-        m_Adapter = new ArrayAdapter<String>(m_View.getContext(), android.R.layout.simple_list_item_1, m_Items);
+        m_Items = new ArrayList<TimeObject>();
+        m_Adapter = new ArrayAdapter<TimeObject>(m_View.getContext(), android.R.layout.simple_list_item_1, m_Items);
 
         ImageButton addTimeButton = (ImageButton) m_View.findViewById(R.id.addTime);
         ListView listView = (ListView) m_View.findViewById(R.id.timeView);
@@ -57,7 +57,7 @@ public class TabTime extends Fragment
 
     public void addItem(String p_Item)
     {
-        m_Items.add(p_Item);
+        m_Items.add(new TimeObject("Test2"));
         m_Adapter.notifyDataSetChanged();
     }
 }
