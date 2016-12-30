@@ -1,5 +1,7 @@
 package com.superteam.klockan;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,12 +13,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+
+    private TimeHandler m_TimeHandler;
+    private TabFragment m_TabTime;
+    private TabFragment m_TabAlarm;
+    private TabFragment m_TabStopwatch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +73,19 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        m_TimeHandler = new TimeHandler(new Callback() {
+            @Override
+            public void onCallback() {
+                m_TabTime.onTimeUpdated();
+                m_TabAlarm.onTimeUpdated();
+                m_TabStopwatch.onTimeUpdated();
+            }
+        });
+
+        m_TabTime = new TabTime();
+        m_TabAlarm = new TabAlarm();
+        m_TabStopwatch = new TabStopwatch();
     }
 
 
@@ -110,13 +132,13 @@ public class MainActivity extends AppCompatActivity {
             switch(position)
             {
                 case 0:
-                    fragment = new TabTime();
+                    fragment = m_TabTime;
                     break;
                 case 1:
-                    fragment = new TabAlarm();
+                    fragment = m_TabAlarm;
                     break;
                 case 2:
-                    fragment = new TabStopwatch();
+                    fragment = m_TabStopwatch;
                     break;
             }
 
