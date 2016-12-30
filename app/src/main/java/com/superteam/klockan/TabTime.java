@@ -1,5 +1,6 @@
 package com.superteam.klockan;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -81,7 +82,9 @@ public class TabTime extends TabFragment
         addTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TabTime) v.getTag()).addItem("Test");
+               // ((TabTime) v.getTag()).addItem("Test");
+                Intent editTimeActivity = new Intent(getActivity(), EditTimeActivity.class);
+                startActivity(editTimeActivity);
             }
         });
     }

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_edit_time"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.superteam.klockan.EditTimeActivity">
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:layout_alignParentTop="true"
+        android:background="#FF4081"
+        android:gravity="center" >
+
+        <com.superteam.klockan.FontFitTextView
+            android:id="@+id/headerTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:text="twenty-five to twelve"
+            android:padding="20px"
+            android:textSize="50dip" />
+    </RelativeLayout>
+
+    <TableLayout
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:shrinkColumns="*" android:stretchColumns="*"
+        android:layout_below="@+id/header"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <TableRow>
+            <NumberPicker
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/numberPickerHour"
+                />
+            <NumberPicker
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/numberPickerMinute"
+                />
+            <NumberPicker
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/numberPickerAMPM"
+                />
+        </TableRow>
+    </TableLayout>
+</RelativeLayout>
