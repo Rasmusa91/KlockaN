@@ -14,11 +14,28 @@ import java.util.TimeZone;
 
 public class TimeObject
 {
-    private String m_Text;
+    private int m_ID;
+    private String m_Title;
 
-    public TimeObject(String p_Text)
+    public TimeObject(int p_ID, String p_Title)
     {
-        m_Text = p_Text;
+        m_ID = p_ID;
+        m_Title = p_Title;
+    }
+
+    public void setID(int p_ID)
+    {
+        m_ID = p_ID;
+    }
+
+    public int getID()
+    {
+        return m_ID;
+    }
+
+    public String getTitle()
+    {
+        return m_Title;
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.superteam.klockan;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -19,6 +21,11 @@ public class EditTimeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_time);
 
+        initialize();
+    }
+
+    private void initialize()
+    {
         String[] stringHours = Utilities.getStringHours();
         String[] stringMinutes = Utilities.getStringMinutes();
         String[] stringAMPM = Utilities.getStringAMPM();
@@ -59,6 +66,23 @@ public class EditTimeActivity extends AppCompatActivity
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
                 m_AMPM = newVal;
                 updateTimeHeader();
+            }
+        });
+
+        ((Button) findViewById(R.id.cancelButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        ((Button) findViewById(R.id.saveButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = ((TextView) findViewById(R.id.timeTitle)).getText().toString();
+                Preferences.AddTime(getApplicationContext(), new TimeObject(-1, title));
+
+                finish();
             }
         });
 

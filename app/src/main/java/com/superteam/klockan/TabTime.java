@@ -34,7 +34,7 @@ public class TabTime extends TabFragment
         m_View = inflater.inflate(R.layout.time_layout, container, false);
 
         return m_View;
-    }
+}
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState)
@@ -91,7 +91,6 @@ public class TabTime extends TabFragment
 
     public void addItem(String p_Item)
     {
-        m_Items.add(new TimeObject("Test2"));
         m_Adapter.notifyDataSetChanged();
     }
 }

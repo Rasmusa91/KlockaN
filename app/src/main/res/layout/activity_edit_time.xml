@@ -10,28 +10,9 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.superteam.klockan.EditTimeActivity">
 
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="100dip"
-        android:layout_alignParentTop="true"
-        android:background="#FF4081"
-        android:gravity="center" >
-
-        <com.superteam.klockan.FontFitTextView
-            android:id="@+id/headerTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textColor="#fff"
-            android:text="twenty-five to twelve"
-            android:padding="20px"
-            android:textSize="50dip" />
-    </RelativeLayout>
-
     <TableLayout
         android:layout_width="fill_parent" android:layout_height="wrap_content"
-        android:shrinkColumns="*" android:stretchColumns="*"
+        android:shrinkColumns="1,2,3" android:stretchColumns="1,2,3"
         android:layout_below="@+id/header"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
@@ -63,5 +44,86 @@
                 android:id="@+id/numberPickerAMPM"
                 />
         </TableRow>
+        <TableRow>
+            <EditText
+                android:hint="Title..."
+                android:inputType="text"
+                android:maxLines="1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/timeTitle"
+                />
+        </TableRow>
+        <TableRow>
+            <Switch
+                android:text="Use as default"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/useAsDefault"
+                />
+        </TableRow>
     </TableLayout>
+
+    <TableLayout
+        android:layout_width="fill_parent" android:layout_height="wrap_content"
+        android:shrinkColumns="*" android:stretchColumns="*"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+        <TableRow>
+            <Button
+                android:text="Cancel"
+                android:textSize="20dip"
+                android:textColor="#fff"
+                android:background="#FF4081"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/cancelButton"
+                />
+
+            <Button
+                android:background="#FF4081"
+                android:textSize="20dip"
+                android:textColor="#fff"
+                android:text="Save"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/saveButton"
+                />
+        </TableRow>
+    </TableLayout>
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="100dip"
+        android:background="#FF4081"
+        android:gravity="center"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <com.superteam.klockan.FontFitTextView
+            android:id="@+id/headerTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:text="twenty-five to twelve"
+            android:padding="20px"
+            android:textSize="50dip" />
+    </RelativeLayout>
 </RelativeLayout>
