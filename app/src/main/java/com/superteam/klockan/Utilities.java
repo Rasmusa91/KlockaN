@@ -75,7 +75,7 @@ public class Utilities
             res = m_Translation.get(fixedMin) + " to " + res;
         }
 
-        //res += " " + (amPM == Calendar.PM ? "PM" : "AM");
+        res += " " + (amPM == Calendar.PM ? "PM" : "AM");
 
         return res;
     }

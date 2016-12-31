@@ -30,11 +30,19 @@ public class Preferences
         return editor;
     }
 
+    public static void ClearPreferences(Context p_Context)
+    {
+        SharedPreferences.Editor editor = getPrefEditor(p_Context);
+        editor.clear();
+        editor.apply();
+
+    }
+
     public static void AddTime(Context p_Context, TimeObject p_TimeObject)
     {
         ArrayList<TimeObject> objects = getAllTimes(p_Context);
         objects.add(p_TimeObject);
-        normalizeTimeObjects(objects);
+        normalizeTimeObjects(objects, p_TimeObject.getDefault());
 
         SharedPreferences.Editor editor = getPrefEditor(p_Context);
         editor.putString("clocks", getJsonFromTimeObjects(objects));
@@ -49,11 +57,16 @@ public class Preferences
         return getTimeObjectsFromJson(timeObjectsJson);
     }
 
-    private static void normalizeTimeObjects(ArrayList<TimeObject> p_TimeObjects)
+    private static void normalizeTimeObjects(ArrayList<TimeObject> p_TimeObjects, boolean p_NewDefault)
     {
         for(int i = 0; i < p_TimeObjects.size(); i++)
         {
             p_TimeObjects.get(i).setID(i);
+
+            if(p_NewDefault && i < p_TimeObjects.size() - 1)
+            {
+                p_TimeObjects.get(i).setDefault(false);
+            }
         }
     }
 
@@ -63,7 +76,11 @@ public class Preferences
 
         for(int i = 0; i < p_Objects.size(); i++)
         {
-            res += "{\"id\" : " + p_Objects.get(i).getID() + ", \"title\" : \"" + p_Objects.get(i).getTitle() + "\"}";
+            res += "{" +
+                    "\"id\" : " + p_Objects.get(i).getID() + ", " +
+                    "\"title\" : \"" + p_Objects.get(i).getTitle() + "\", " +
+                    "\"default\" : " + p_Objects.get(i).getDefault() + ", " +
+                    "\"offset\" : " + p_Objects.get(i).getOffsetMS() + "}";
 
             if(i < p_Objects.size() - 1) {
                 res += ",";
@@ -87,7 +104,7 @@ public class Preferences
                 for(int i = 0; i < reader.length(); i++)
                 {
                     JSONObject clock = reader.getJSONObject(i);
-                    timeObjects.add(new TimeObject(clock.getInt("id"), clock.getString("title")));
+                    timeObjects.add(new TimeObject(clock.getInt("id"), clock.getString("title"), clock.getBoolean("default"), clock.getLong("offset")));
                 }
 
             } catch (JSONException e) {

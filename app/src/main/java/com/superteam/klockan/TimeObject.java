@@ -16,11 +16,15 @@ public class TimeObject
 {
     private int m_ID;
     private String m_Title;
+    private boolean m_Default;
+    private long m_OffsetMS;
 
-    public TimeObject(int p_ID, String p_Title)
+    public TimeObject(int p_ID, String p_Title, boolean p_Default, long p_OffsetMS)
     {
         m_ID = p_ID;
         m_Title = p_Title;
+        m_Default = p_Default;
+        m_OffsetMS = p_OffsetMS;
     }
 
     public void setID(int p_ID)
@@ -38,6 +42,21 @@ public class TimeObject
         return m_Title;
     }
 
+    public void setDefault(boolean p_Default)
+    {
+        m_Default = p_Default;
+    }
+
+    public boolean getDefault()
+    {
+        return m_Default;
+    }
+
+    public long getOffsetMS()
+    {
+        return m_OffsetMS;
+    }
+
     @Override
     public String toString()
     {
@@ -46,9 +65,8 @@ public class TimeObject
 
     private String getTimeInText()
     {
-        String res = "";
-
-        Calendar c = Calendar.getInstance(Locale.getDefault());
+        Calendar c = Calendar.getInstance();
+        c.setTimeInMillis(c.getTimeInMillis() + m_OffsetMS);
         int hour = c.get(Calendar.HOUR);
         int minute = c.get(Calendar.MINUTE);
         int amPM = c.get(Calendar.AM_PM);

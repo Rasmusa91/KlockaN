@@ -76,7 +76,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
-        <TableRow>
+        <TableRow
+            android:id="@+id/addRow">
             <Button
                 android:text="Cancel"
                 android:textSize="20dip"
@@ -102,6 +103,49 @@
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="5dip"
                 android:id="@+id/saveButton"
+                />
+        </TableRow>
+        <TableRow
+            android:id="@+id/editRow">
+            <Button
+                android:text="Cancel"
+                android:textSize="20dip"
+                android:textColor="#fff"
+                android:background="#FF4081"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/cancelButton2"
+                />
+
+            <Button
+                android:background="#FF4081"
+                android:textSize="20dip"
+                android:textColor="#fff"
+                android:text="Delete"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:layout_marginRight="5dip"
+                android:id="@+id/deleteButton2"
+                />
+
+            <Button
+                android:background="#FF4081"
+                android:textSize="20dip"
+                android:textColor="#fff"
+                android:text="Save"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/saveButton2"
                 />
         </TableRow>
     </TableLayout>
