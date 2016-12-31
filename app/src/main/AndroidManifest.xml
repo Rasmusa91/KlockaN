@@ -19,6 +19,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditTimeActivity"></activity>
+        <activity android:name=".EditAlarmActivity"></activity>
     </application>
 
 </manifest>

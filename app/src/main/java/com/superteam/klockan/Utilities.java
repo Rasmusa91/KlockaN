@@ -10,84 +10,9 @@ import java.util.Locale;
 
 public class Utilities
 {
-    public static String timeToString(int p_Hour, int p_Minute, int p_AM_PM)
-    {
-        HashMap<Integer, String> m_Translation = new HashMap<Integer, String>();
-        m_Translation.put(0, "Twelve");
-        m_Translation.put(1, "One");
-        m_Translation.put(2, "Two");
-        m_Translation.put(3, "Three");
-        m_Translation.put(4, "Four");
-        m_Translation.put(5, "Five");
-        m_Translation.put(6, "Six");
-        m_Translation.put(7, "Seven");
-        m_Translation.put(8, "Eight");
-        m_Translation.put(9, "Nine");
-        m_Translation.put(10, "Ten");
-        m_Translation.put(11, "Eleven");
-        m_Translation.put(12, "Twelve");
-        m_Translation.put(15, "Quarter");
-        m_Translation.put(20, "Twenty");
-        m_Translation.put(25, "Twenty-five");
-        m_Translation.put(30, "Half");
-        m_Translation.put(35, "Twenty-five");
-        m_Translation.put(40, "Twenty");
-        m_Translation.put(45, "Quarter");
-        m_Translation.put(50, "Ten");
-        m_Translation.put(55, "Five");
+    private static int DEFAULT_MINUTE_PRECISION = 5;
 
-        String res = "";
-
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR, p_Hour);
-        c.set(Calendar.MINUTE, p_Minute);
-        c.set(Calendar.AM_PM, p_AM_PM);
-
-        int hour = c.get(Calendar.HOUR);
-        int minute = c.get(Calendar.MINUTE);
-        int amPM = c.get(Calendar.AM_PM);
-
-        int fixedMin = (int) Math.floor(minute / 5) * 5;
-        int fixedHour = hour;
-
-        if(fixedMin > 30)
-        {
-            fixedHour++;
-
-            if(fixedHour > 12)
-            {
-                fixedHour = 1;
-            }
-        }
-
-        res = m_Translation.get(fixedHour);
-
-        if(fixedMin == 0)
-        {
-            res += " o'clock";
-        }
-        else if(fixedMin <= 30)
-        {
-            res = m_Translation.get(fixedMin) + " past " + res;
-        }
-        else if(fixedMin > 30)
-        {
-            res = m_Translation.get(fixedMin) + " to " + res;
-        }
-
-        res += " " + (amPM == Calendar.PM ? "PM" : "AM");
-
-        return res;
-    }
-
-    public static String[] getStringHours()
-    {
-        return new String[] {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"};
-    }
-
-    public static String[] getStringMinutes()
-    {
-        return new String[]{
+    private static String[] timeStringValues = {
             "Zero",
 
             "One",
@@ -154,7 +79,70 @@ public class Utilities
             "Fifty-seven",
             "Fifty-eight",
             "Fifty-nine"
-        };
+    };
+
+
+    public static String timeToString(int p_Hour, int p_Minute, int p_AM_PM){
+        return timeToString(p_Hour, p_Minute, p_AM_PM, DEFAULT_MINUTE_PRECISION);
+    }
+    public static String timeToString(int p_Hour, int p_Minute, int p_AM_PM, int minutePrecision)
+    {
+        String res = "";
+        String minuteString;
+        String pastOrTo;
+
+        int fixedMin = (int) Math.floor(p_Minute / minutePrecision) * minutePrecision;
+        int fixedHour = p_Hour == 0 ? 12 : p_Hour;
+
+        //If past 30 minutes of the hour, its gonna be "to <next-hour>" instead of "past <current hour>".
+        if(fixedMin > 30)
+        {
+            fixedHour++;
+
+            if(fixedHour > 12)
+            {
+                fixedHour = 1;
+            }
+
+            fixedMin = 30 + (30 - fixedMin);
+            pastOrTo = " to ";
+        }else{
+            pastOrTo = " past ";
+        }
+        if(fixedMin == 15 || fixedMin == 45){
+            minuteString = "Quarter";
+        }else if (fixedMin == 30){
+            minuteString = "Half";
+        }else{
+            minuteString = timeStringValues[fixedMin];
+        }
+
+        res = timeStringValues[fixedHour];
+
+        if(fixedMin == 0)
+        {
+            res += " o'clock";
+        }
+        else if(fixedMin <= 30)
+        {
+            res = minuteString + pastOrTo + res;
+        }
+        else if(fixedMin > 30)
+        {
+            res = minuteString + pastOrTo + res;
+        }
+
+        return res;
+    }
+
+    public static String[] getStringHours()
+    {
+        return new String[] {"One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"};
+    }
+
+    public static String[] getStringMinutes()
+    {
+        return timeStringValues;
     }
 
     public static String[] getStringAMPM()
