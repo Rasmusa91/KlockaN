@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -65,6 +66,7 @@ public class TabTime extends TabFragment
 
     private void initialize()
     {
+        Preferences.clearPreferences(getContext());
         m_Items = Preferences.getAllTimes(getContext());
 
         if(m_Items.size() == 0)
@@ -91,13 +93,19 @@ public class TabTime extends TabFragment
         Button addTimeButton = (Button) m_View.findViewById(R.id.addTime);
         ListView listView = (ListView) m_View.findViewById(R.id.timeView);
         listView.setAdapter(m_Adapter);
+        listView.setClickable(true);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                startEditTimeActivity(m_Items.get(position).getID());
+            }
+        });
 
         addTimeButton.setTag(this);
         addTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent editTimeActivity = new Intent(getActivity(), EditTimeActivity.class);
-                startActivity(editTimeActivity);
+                startEditTimeActivity(-1);
             }
         });
 
@@ -135,6 +143,13 @@ public class TabTime extends TabFragment
 
     private void addDefaultTimeObject()
     {
-        Preferences.AddTime(getContext(), new TimeObject(0, "Default", true, 0));
+        Preferences.addTime(getContext(), new TimeObject(0, "Default", true, 0));
+    }
+
+    private void startEditTimeActivity(int p_ID)
+    {
+        Intent intent = new Intent(getActivity(), EditTimeActivity.class);
+        intent.putExtra("editObjectID", p_ID);
+        startActivity(intent);
     }
 }

@@ -71,7 +71,7 @@ public class TimeObject
         int minute = c.get(Calendar.MINUTE);
         int amPM = c.get(Calendar.AM_PM);
 
-        return Utilities.timeToString(hour, minute, amPM);
+        return Utilities.timeToString(hour, minute, amPM, 1);
     }
 }
 

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 public class Preferences
 {
+    private static ArrayList<TimeObject> m_TimeObjects;
+
     private static SharedPreferences getPrefSettings(Context p_Context)
     {
         SharedPreferences settings = p_Context.getSharedPreferences("Preferences", 0);
@@ -30,7 +32,7 @@ public class Preferences
         return editor;
     }
 
-    public static void ClearPreferences(Context p_Context)
+    public static void clearPreferences(Context p_Context)
     {
         SharedPreferences.Editor editor = getPrefEditor(p_Context);
         editor.clear();
@@ -38,10 +40,17 @@ public class Preferences
 
     }
 
-    public static void AddTime(Context p_Context, TimeObject p_TimeObject)
+    public static void addTime(Context p_Context, TimeObject p_TimeObject)
     {
         ArrayList<TimeObject> objects = getAllTimes(p_Context);
-        objects.add(p_TimeObject);
+
+        if(p_TimeObject.getID() == -1 || objects.size() <= p_TimeObject.getID()) {
+            objects.add(p_TimeObject);
+        }
+        else {
+            objects.set(p_TimeObject.getID(), p_TimeObject);
+        }
+
         normalizeTimeObjects(objects, p_TimeObject.getDefault());
 
         SharedPreferences.Editor editor = getPrefEditor(p_Context);
@@ -51,10 +60,15 @@ public class Preferences
 
     public static ArrayList<TimeObject> getAllTimes(Context p_Context)
     {
-        SharedPreferences settings = getPrefSettings(p_Context);
-        String timeObjectsJson = settings.getString("clocks", null);
+        if(m_TimeObjects == null)
+        {
+            SharedPreferences settings = getPrefSettings(p_Context);
+            String timeObjectsJson = settings.getString("clocks", null);
 
-        return getTimeObjectsFromJson(timeObjectsJson);
+            m_TimeObjects = getTimeObjectsFromJson(timeObjectsJson);
+        }
+
+        return m_TimeObjects;
     }
 
     private static void normalizeTimeObjects(ArrayList<TimeObject> p_TimeObjects, boolean p_NewDefault)

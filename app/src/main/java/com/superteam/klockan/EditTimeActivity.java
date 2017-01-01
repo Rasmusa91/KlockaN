@@ -33,11 +33,42 @@ public class EditTimeActivity extends AppCompatActivity
 
     private void initialize()
     {
+        TimeObject editObject = getEditObject();
+        generateTimeVariables(editObject);
+        initializePickers();
+
+        if(editObject == null) {
+            initializeForAdd();
+        }
+        else {
+            initializeForEdit(editObject);
+        }
+
+        updateTimeHeader();
+    }
+
+    private TimeObject getEditObject()
+    {
+        int editID = getIntent().getExtras().getInt("editObjectID");
+        return (editID != -1 ? Preferences.getAllTimes(getApplicationContext()).get(editID) : null);
+    }
+
+    private void generateTimeVariables(TimeObject p_EditObject)
+    {
         Calendar c = Calendar.getInstance(Locale.getDefault());
+
+        if(p_EditObject != null)
+        {
+            c.setTimeInMillis(c.getTimeInMillis() + p_EditObject.getOffsetMS());
+        }
+
         m_Hour = c.get(Calendar.HOUR) - 1;
         m_Minute = c.get(Calendar.MINUTE);
         m_AMPM = c.get(Calendar.AM_PM);
+    }
 
+    private void initializePickers()
+    {
         String[] stringHours = Utilities.getStringHours();
         String[] stringMinutes = Utilities.getStringMinutes();
         String[] stringAMPM = Utilities.getStringAMPM();
@@ -83,55 +114,101 @@ public class EditTimeActivity extends AppCompatActivity
                 updateTimeHeader();
             }
         });
+    }
 
-        ((Button) findViewById(R.id.cancelButton)).setOnClickListener(new View.OnClickListener() {
+    private void initializeForAdd()
+    {
+        findViewById(R.id.editRow).setVisibility(View.GONE);
+
+        findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
             }
         });
 
-        ((Button) findViewById(R.id.saveButton)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String title = ((TextView) findViewById(R.id.timeTitle)).getText().toString();
-                boolean isDefault = ((Switch) findViewById(R.id.useAsDefault)).isChecked();
-                int hour = ((NumberPicker) findViewById(R.id.numberPickerHour)).getValue();
-                int minute = ((NumberPicker) findViewById(R.id.numberPickerMinute)).getValue();
-                int ampm = ((NumberPicker) findViewById(R.id.numberPickerAMPM)).getValue();
-                hour += 1;
-                ampm = (ampm == 0 ? Calendar.AM : Calendar.PM);
+                saveObject();
+            }
+        });
+    }
 
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.HOUR, hour);
-                c.set(Calendar.MINUTE, minute);
-                c.set(Calendar.AM_PM, ampm);
+    private void initializeForEdit(final TimeObject p_EditObject)
+    {
+        findViewById(R.id.addRow).setVisibility(View.GONE);
 
-                Calendar curr = Calendar.getInstance();
+        ((TextView) findViewById(R.id.timeTitle)).setText(p_EditObject.getTitle());
+        ((Switch) findViewById(R.id.useAsDefault)).setChecked(p_EditObject.getDefault());
 
-                long offset = c.getTimeInMillis() - curr.getTimeInMillis();
-
-                if(validateValues(title))
-                {
-                    Preferences.AddTime(getApplicationContext(), new TimeObject(-1, title, isDefault, offset));
-
-                    finish();
-                }
-                else
-                {
-                    toastError();
-                }
+        findViewById(R.id.cancelButton2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
-        ((TableRow) findViewById(R.id.editRow)).setVisibility(View.GONE);
+        findViewById(R.id.saveButton2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveObject(p_EditObject);
+            }
+        });
 
-        updateTimeHeader();
+        findViewById(R.id.deleteButton2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                deleteObject(p_EditObject);
+            }
+        });
     }
 
     private void updateTimeHeader()
     {
-        ((TextView) findViewById(R.id.headerTime)).setText(Utilities.timeToString(m_Hour + 1, m_Minute, m_AMPM));
+        ((TextView) findViewById(R.id.headerTime)).setText(Utilities.timeToString(m_Hour + 1, m_Minute, m_AMPM, 1));
+    }
+
+    private void saveObject()
+    {
+        saveObject(null);
+    }
+
+    private void saveObject(TimeObject p_EditObject)
+    {
+        String title = ((TextView) findViewById(R.id.timeTitle)).getText().toString();
+        boolean isDefault = ((Switch) findViewById(R.id.useAsDefault)).isChecked();
+        int hour = ((NumberPicker) findViewById(R.id.numberPickerHour)).getValue();
+        int minute = ((NumberPicker) findViewById(R.id.numberPickerMinute)).getValue();
+        int ampm = ((NumberPicker) findViewById(R.id.numberPickerAMPM)).getValue();
+        hour += 1;
+        ampm = (ampm == 0 ? Calendar.AM : Calendar.PM);
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR, hour);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.AM_PM, ampm);
+
+        Calendar curr = Calendar.getInstance();
+
+        long offset = c.getTimeInMillis() - curr.getTimeInMillis();
+
+        if(validateValues(title))
+        {
+            int id = (p_EditObject != null ? p_EditObject.getID() : -1);
+            Preferences.addTime(getApplicationContext(), new TimeObject(id, title, isDefault, offset));
+
+            finish();
+        }
+        else
+        {
+            toastError();
+        }
+    }
+
+    private void deleteObject(TimeObject p_EditObject)
+    {
+
     }
 
     private boolean validateValues(String p_Title)
