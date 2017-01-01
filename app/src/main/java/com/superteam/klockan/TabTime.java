@@ -66,7 +66,6 @@ public class TabTime extends TabFragment
 
     private void initialize()
     {
-        Preferences.clearPreferences(getContext());
         m_Items = Preferences.getAllTimes(getContext());
 
         if(m_Items.size() == 0)
@@ -75,16 +74,14 @@ public class TabTime extends TabFragment
             m_Items = Preferences.getAllTimes(getContext());
         }
 
-        m_Adapter = new ArrayAdapter<TimeObject>(m_View.getContext(), android.R.layout.simple_list_item_2, android.R.id.text1, m_Items) {
+        m_Adapter = new ArrayAdapter<TimeObject>(m_View.getContext(), R.layout.list_item, R.id.text1, m_Items) {
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 View view = super.getView(position, convertView, parent);
 
-                TextView text1 = (TextView) view.findViewById(android.R.id.text1);
-                TextView text2 = (TextView) view.findViewById(android.R.id.text2);
-
-                text1.setText(m_Items.get(position).toString());
-                text2.setText(m_Items.get(position).getTitle());
+                ((TextView) view.findViewById(R.id.text1)).setText(m_Items.get(position).toString());
+                ((TextView) view.findViewById(R.id.text2)).setText(m_Items.get(position).getTitle());
+                view.findViewById(R.id.checked).setVisibility(m_Items.get(position).getDefault() ? View.VISIBLE : View.GONE);
 
                 return view;
             }
