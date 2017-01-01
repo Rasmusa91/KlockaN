@@ -106,7 +106,7 @@ public class Preferences
             }
         }
 
-        if(!defaultFound) {
+        if(!defaultFound && p_TimeObjects.size() > 0) {
             p_TimeObjects.get(0).setDefault(true);
         }
     }

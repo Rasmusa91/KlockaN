@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -150,6 +151,7 @@ public class TabTime extends TabFragment
     private void addDefaultTimeObject()
     {
         Preferences.addTime(getContext(), new TimeObject(0, "Default", true, 0));
+        Toast.makeText(getContext(), "Added default time", Toast.LENGTH_LONG).show();
     }
 
     private void startEditTimeActivity(int p_ID)
