@@ -51,7 +51,7 @@ public class Preferences
             objects.set(p_TimeObject.getID(), p_TimeObject);
         }
 
-        normalizeTimeObjects(objects, p_TimeObject.getDefault());
+        normalizeTimeObjects(objects, p_TimeObject);
 
         SharedPreferences.Editor editor = getPrefEditor(p_Context);
         editor.putString("clocks", getJsonFromTimeObjects(objects));
@@ -71,15 +71,15 @@ public class Preferences
         return m_TimeObjects;
     }
 
-    private static void normalizeTimeObjects(ArrayList<TimeObject> p_TimeObjects, boolean p_NewDefault)
+    private static void normalizeTimeObjects(ArrayList<TimeObject> p_TimeObjects, TimeObject p_NewObject)
     {
         for(int i = 0; i < p_TimeObjects.size(); i++)
         {
             p_TimeObjects.get(i).setID(i);
 
-            if(p_NewDefault && i < p_TimeObjects.size() - 1)
+            if(p_NewObject.getDefault())
             {
-                p_TimeObjects.get(i).setDefault(false);
+                p_TimeObjects.get(i).setDefault(p_TimeObjects.get(i) == p_NewObject ? true : false);
             }
         }
     }
