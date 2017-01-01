@@ -30,6 +30,7 @@ public class TabTime extends TabFragment
     private ArrayAdapter<TimeObject> m_Adapter;
     private View m_View;
     private int m_DefaultTimeObjectIndex;
+    private boolean m_IsPaused;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,12 +51,20 @@ public class TabTime extends TabFragment
         super.onResume();
 
         initialize();
+        m_IsPaused = false;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        m_IsPaused = true;
     }
 
     @Override
     public void onTimeUpdated()
     {
-        if(m_View == null || m_Adapter == null)
+        if(m_View == null || m_Adapter == null || m_IsPaused)
         {
             return;
         }
@@ -133,8 +142,8 @@ public class TabTime extends TabFragment
         if(m_Items.size() == 0)
         {
             return;
-
         }
+
         ((TextView) m_View.findViewById(R.id.headerTime)).setText(m_Items.get(m_DefaultTimeObjectIndex).toString());
     }
 

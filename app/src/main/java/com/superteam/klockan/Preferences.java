@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -52,10 +53,17 @@ public class Preferences
         }
 
         normalizeTimeObjects(objects, p_TimeObject);
+        saveObjects(p_Context, objects);
+    }
 
-        SharedPreferences.Editor editor = getPrefEditor(p_Context);
-        editor.putString("clocks", getJsonFromTimeObjects(objects));
-        editor.apply();
+    public static void deleteTime(Context p_Context, TimeObject p_TimeObject)
+    {
+        ArrayList<TimeObject> objects = getAllTimes(p_Context);
+        objects.remove(p_TimeObject);
+        normalizeTimeObjects(objects, p_TimeObject);
+
+        normalizeTimeObjects(objects, p_TimeObject);
+        saveObjects(p_Context, objects);
     }
 
     public static ArrayList<TimeObject> getAllTimes(Context p_Context)
@@ -71,16 +79,35 @@ public class Preferences
         return m_TimeObjects;
     }
 
+    private static void saveObjects(Context p_Context, ArrayList<TimeObject> p_TimeObjects)
+    {
+        m_TimeObjects = p_TimeObjects;
+
+        SharedPreferences.Editor editor = getPrefEditor(p_Context);
+        editor.putString("clocks", getJsonFromTimeObjects(p_TimeObjects));
+        editor.apply();
+    }
+
     private static void normalizeTimeObjects(ArrayList<TimeObject> p_TimeObjects, TimeObject p_NewObject)
     {
+        boolean defaultFound = false;
+
         for(int i = 0; i < p_TimeObjects.size(); i++)
         {
             p_TimeObjects.get(i).setID(i);
 
-            if(p_NewObject.getDefault())
+            if(p_NewObject != null && p_NewObject.getDefault())
             {
                 p_TimeObjects.get(i).setDefault(p_TimeObjects.get(i) == p_NewObject ? true : false);
             }
+
+            if(p_TimeObjects.get(i).getDefault()) {
+                defaultFound = true;
+            }
+        }
+
+        if(!defaultFound) {
+            p_TimeObjects.get(0).setDefault(true);
         }
     }
 

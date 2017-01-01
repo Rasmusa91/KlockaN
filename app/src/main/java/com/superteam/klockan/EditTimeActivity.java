@@ -208,7 +208,8 @@ public class EditTimeActivity extends AppCompatActivity
 
     private void deleteObject(TimeObject p_EditObject)
     {
-
+        Preferences.deleteTime(getApplicationContext(), p_EditObject);
+        finish();
     }
 
     private boolean validateValues(String p_Title)
