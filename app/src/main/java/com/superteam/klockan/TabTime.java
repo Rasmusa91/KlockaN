@@ -55,7 +55,7 @@ public class TabTime extends TabFragment
     @Override
     public void onTimeUpdated()
     {
-        if(m_View == null)
+        if(m_View == null || m_Adapter == null)
         {
             return;
         }
@@ -148,5 +148,16 @@ public class TabTime extends TabFragment
         Intent intent = new Intent(getActivity(), EditTimeActivity.class);
         intent.putExtra("editObjectID", p_ID);
         startActivity(intent);
+    }
+
+    public String getCurrentTimeString()
+    {
+        String res = "";
+
+        if(m_Items != null && m_Items.size() > m_DefaultTimeObjectIndex) {
+            res = m_Items.get(m_DefaultTimeObjectIndex).toString();
+        }
+
+        return res;
     }
 }

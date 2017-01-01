@@ -1,7 +1,14 @@
 package com.superteam.klockan;
 
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.speech.tts.TextToSpeech;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -25,6 +32,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     /**
@@ -43,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     private TimeHandler m_TimeHandler;
+    private ShakeHandler m_ShakeHandler;
+    private TextToSpeechHandler m_TextToSpeechHandler;
     private TabFragment m_TabTime;
     private TabFragment m_TabAlarm;
     private TabFragment m_TabStopwatch;
@@ -71,6 +82,16 @@ public class MainActivity extends AppCompatActivity {
                 m_TabTime.onTimeUpdated();
                 m_TabAlarm.onTimeUpdated();
                 m_TabStopwatch.onTimeUpdated();
+            }
+        });
+
+        m_TextToSpeechHandler = new TextToSpeechHandler(getApplicationContext());
+
+        m_ShakeHandler = new ShakeHandler(this, new Callback() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onCallback() {
+                readTime();
             }
         });
 
@@ -154,5 +175,11 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void readTime()
+    {
+        m_TextToSpeechHandler.speak("The time is " + ((TabTime) m_TabTime).getCurrentTimeString());
     }
 }

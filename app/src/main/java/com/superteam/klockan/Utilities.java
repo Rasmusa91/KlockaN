@@ -81,10 +81,14 @@ public class Utilities
             "Fifty-nine"
     };
 
+    public static String timeToString(int p_Hour, int p_Minute){
+        return timeToString(p_Hour, p_Minute, -1, DEFAULT_MINUTE_PRECISION);
+    }
 
     public static String timeToString(int p_Hour, int p_Minute, int p_AM_PM){
         return timeToString(p_Hour, p_Minute, p_AM_PM, DEFAULT_MINUTE_PRECISION);
     }
+
     public static String timeToString(int p_Hour, int p_Minute, int p_AM_PM, int minutePrecision)
     {
         String res = "";
@@ -119,17 +123,15 @@ public class Utilities
 
         res = timeStringValues[fixedHour];
 
-        if(fixedMin == 0)
-        {
+        if(fixedMin == 0) {
             res += " o'clock";
         }
-        else if(fixedMin <= 30)
-        {
+        else {
             res = minuteString + pastOrTo + res;
         }
-        else if(fixedMin > 30)
-        {
-            res = minuteString + pastOrTo + res;
+
+        if(p_AM_PM != -1) {
+            res += " " + (p_AM_PM == Calendar.AM ? "AM" : "PM");
         }
 
         return res;
