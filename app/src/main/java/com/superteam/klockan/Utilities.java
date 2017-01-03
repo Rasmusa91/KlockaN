@@ -169,4 +169,17 @@ public class Utilities
 
         return timeObject;
     }
+
+    public static long getCurrentTimeDiffMS(Context p_Context)
+    {
+        long timeDiffMS = -1;
+        TimeObject timeObject = getDefaultTimeObject(p_Context);
+
+        if(timeObject != null)
+        {
+            timeDiffMS = timeObject.getOffsetMS();
+        }
+
+        return timeDiffMS;
+    }
 }

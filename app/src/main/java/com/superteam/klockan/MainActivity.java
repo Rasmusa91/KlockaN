@@ -60,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
     private TabFragment m_TabStopwatch;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -82,6 +83,10 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
+        m_TabTime = new TabTime();
+        m_TabAlarm = new TabAlarm();
+        m_TabStopwatch = new TabStopwatch();
+
         m_TimeHandler = new TimeHandler(new Callback() {
             @Override
             public void onCallback() {
@@ -92,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         m_TextToSpeechHandler = new TextToSpeechHandler(getApplicationContext());
-
         m_ShakeHandler = new ShakeHandler(this, new Callback() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
@@ -101,9 +105,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        m_TabTime = new TabTime();
-        m_TabAlarm = new TabAlarm();
-        m_TabStopwatch = new TabStopwatch();
+        Preferences.setDefaultTimeChangedCallback(new Callback() {
+            @Override
+            public void onCallback() {
+                m_TabTime.onDefaultTimeChanged();
+                m_TabAlarm.onDefaultTimeChanged();
+                m_TabStopwatch.onDefaultTimeChanged();
+            }
+        });
     }
 
 

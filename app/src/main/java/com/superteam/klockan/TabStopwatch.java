@@ -26,4 +26,9 @@ public class TabStopwatch extends TabFragment
     {
 
     }
+
+    @Override
+    public void onDefaultTimeChanged()
+    {
+    }
 }

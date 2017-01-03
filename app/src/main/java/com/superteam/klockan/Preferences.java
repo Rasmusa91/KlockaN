@@ -3,6 +3,7 @@ package com.superteam.klockan;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,16 +35,21 @@ public class Preferences
         return editor;
     }
 
+    public static void setDefaultTimeChangedCallback(Callback p_Callback)
+    {
+        m_DefaultTimeChangedCallback = p_Callback;
+    }
+
     public static void clearPreferences(Context p_Context)
     {
         SharedPreferences.Editor editor = getPrefEditor(p_Context);
         editor.clear();
         editor.apply();
-
     }
 
     public static void addTime(Context p_Context, TimeObject p_TimeObject)
     {
+        long currentDefaultOffset = Utilities.getCurrentTimeDiffMS(p_Context);
         ArrayList<TimeObject> objects = getAllTimes(p_Context);
 
         if(p_TimeObject.getID() == -1 || objects.size() <= p_TimeObject.getID()) {
@@ -55,15 +61,20 @@ public class Preferences
 
         normalizeTimeObjects(objects, p_TimeObject);
         saveObjects(p_Context, objects);
+
+        checkDefaultTimeDiff(p_Context, currentDefaultOffset);
     }
 
     public static void deleteTime(Context p_Context, TimeObject p_TimeObject)
     {
+        long currentDefaultOffset = Utilities.getCurrentTimeDiffMS(p_Context);
         ArrayList<TimeObject> objects = getAllTimes(p_Context);
         objects.remove(p_TimeObject);
 
         normalizeTimeObjects(objects, p_TimeObject);
         saveObjects(p_Context, objects);
+
+        checkDefaultTimeDiff(p_Context, currentDefaultOffset);
     }
 
     public static ArrayList<TimeObject> getAllTimes(Context p_Context)
@@ -74,6 +85,10 @@ public class Preferences
             String timeObjectsJson = settings.getString("clocks", null);
 
             m_TimeObjects = getTimeObjectsFromJson(timeObjectsJson);
+        }
+
+        if(m_TimeObjects.size() == 0) {
+            addDefaultTimeObject();
         }
 
         return m_TimeObjects;
@@ -154,5 +169,23 @@ public class Preferences
         }
 
         return timeObjects;
+    }
+
+    private static void addDefaultTimeObject()
+    {
+        m_TimeObjects.add(new TimeObject(0, "Default", true, 0));
+    }
+
+    private static void checkDefaultTimeDiff(Context p_Context, long p_LastTimeDiffMS)
+    {
+        long currentLastTimeMS = Utilities.getCurrentTimeDiffMS(p_Context);
+
+        if(currentLastTimeMS != p_LastTimeDiffMS)
+        {
+            if(m_DefaultTimeChangedCallback != null)
+            {
+                m_DefaultTimeChangedCallback.onCallback();
+            }
+        }
     }
 }

@@ -52,4 +52,9 @@ public class TabAlarm extends TabFragment
     {
 
     }
+
+    @Override
+    public void onDefaultTimeChanged()
+    {
+    }
 }

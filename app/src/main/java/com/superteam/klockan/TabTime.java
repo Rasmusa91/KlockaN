@@ -74,15 +74,14 @@ public class TabTime extends TabFragment
         updateHeaderTime();
     }
 
+    @Override
+    public void onDefaultTimeChanged()
+    {
+    }
+
     private void initialize()
     {
         m_Items = Preferences.getAllTimes(getContext());
-
-        if(m_Items.size() == 0)
-        {
-            addDefaultTimeObject();
-            m_Items = Preferences.getAllTimes(getContext());
-        }
 
         m_Adapter = new ArrayAdapter<TimeObject>(m_View.getContext(), R.layout.list_item, R.id.text1, m_Items) {
             @Override
@@ -146,12 +145,6 @@ public class TabTime extends TabFragment
         }
 
         ((TextView) m_View.findViewById(R.id.headerTime)).setText(m_Items.get(m_DefaultTimeObjectIndex).toString());
-    }
-
-    private void addDefaultTimeObject()
-    {
-        Preferences.addTime(getContext(), new TimeObject(0, "Default", true, 0));
-        Toast.makeText(getContext(), "Added default time", Toast.LENGTH_LONG).show();
     }
 
     private void startEditTimeActivity(int p_ID)
