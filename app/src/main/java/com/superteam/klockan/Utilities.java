@@ -1,5 +1,8 @@
 package com.superteam.klockan;
 
+import android.content.Context;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
@@ -150,5 +153,20 @@ public class Utilities
     public static String[] getStringAMPM()
     {
         return new String[] {"AM", "PM"};
+    }
+
+    public static TimeObject getDefaultTimeObject(Context p_Context)
+    {
+        TimeObject timeObject = null;
+        ArrayList<TimeObject> timeObjects = Preferences.getAllTimes(p_Context);
+
+        for(int i = 0; i < timeObjects.size() && timeObject == null; i++)
+        {
+            if(timeObjects.get(i).getDefault())  {
+                timeObject = timeObjects.get(i);
+            }
+        }
+
+        return timeObject;
     }
 }
