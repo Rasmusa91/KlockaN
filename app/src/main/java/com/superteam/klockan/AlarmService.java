@@ -53,6 +53,7 @@ public class AlarmService extends Service {
                 alarmManager.cancel(pi);
 
                 if(alarm.isEnabled()){
+
                     alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMS(), pi);
                 }
             }

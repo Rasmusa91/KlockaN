@@ -44,6 +44,7 @@ public class EditAlarmActivity extends AppCompatActivity {
 
         if(editObject != null){
             ((TextView)findViewById(R.id.alarmTitle)).setText(editObject.getTitle());
+            ((Switch)findViewById(R.id.enabledSwitch)).setChecked(editObject.isEnabled());
         }
 
         findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
@@ -142,9 +143,15 @@ public class EditAlarmActivity extends AppCompatActivity {
         ampm = (ampm == 0 ? Calendar.AM : Calendar.PM);
 
         Calendar c = Calendar.getInstance();
+        long currentTimeInMillis = c.getTimeInMillis();
+
         c.set(Calendar.HOUR, hour);
         c.set(Calendar.MINUTE, minute);
         c.set(Calendar.AM_PM, ampm);
+
+        if(c.getTimeInMillis() <= currentTimeInMillis){
+            c.add(Calendar.DAY_OF_MONTH, 1);
+        }
 
         if(title == null){//Make sure there is a title
             title = "";
