@@ -63,10 +63,16 @@ public class TimeObject
         return getTimeInText();
     }
 
+    public long getTimeInMillis()
+    {
+        Calendar c = Calendar.getInstance();
+        return c.getTimeInMillis() + m_OffsetMS;
+    }
+
     private String getTimeInText()
     {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(c.getTimeInMillis() + m_OffsetMS);
+        c.setTimeInMillis(getTimeInMillis());
         int hour = c.get(Calendar.HOUR);
         int minute = c.get(Calendar.MINUTE);
         int amPM = c.get(Calendar.AM_PM);
