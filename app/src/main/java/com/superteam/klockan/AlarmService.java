@@ -67,6 +67,7 @@ public class AlarmService extends Service {
         Log.e("AlarmService", "Alarm - " + msg);
 
         Intent editAlarmIntent = new Intent(this, EditAlarmActivity.class);
+        editAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         this.startActivity(editAlarmIntent);
     }
 
