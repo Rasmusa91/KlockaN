@@ -75,6 +75,7 @@ public class AlarmService extends Service {
         Toast.makeText(this, "AlarmService onDestroy()", Toast.LENGTH_SHORT).show();
         Log.e("AlarmService", "OnDestroy()");
 
+        alarmsInitialized = false;
         super.onDestroy();
     }
 
