@@ -3,6 +3,7 @@ package com.superteam.klockan;
 import android.content.Context;
 import android.os.Build;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.support.annotation.RequiresApi;
 
 import java.util.Locale;
@@ -25,6 +26,7 @@ public class TextToSpeechHandler
                 }
             }
         });
+        m_TextToSpeech.setPitch(0.2f);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)

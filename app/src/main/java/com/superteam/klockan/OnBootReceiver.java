@@ -14,6 +14,7 @@ public class OnBootReceiver extends BroadcastReceiver {
         //Set up the alarmService
         Intent alarmServiceIntent = new Intent(context, AlarmService.class);
         alarmServiceIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_START_SERVICE);
+        alarmServiceIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startService(alarmServiceIntent);
     }
 }

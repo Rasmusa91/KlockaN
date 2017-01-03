@@ -20,6 +20,7 @@ public class Preferences
 {
     private static ArrayList<TimeObject> m_TimeObjects;
     private static Callback m_DefaultTimeChangedCallback;
+    private static ArrayList<AlarmObject> m_AlarmObjects;
 
     private static SharedPreferences getPrefSettings(Context p_Context)
     {
@@ -46,6 +47,91 @@ public class Preferences
         editor.clear();
         editor.apply();
     }
+
+    public static void addAlarm(Context p_Context, AlarmObject p_AlarmObject){
+        ArrayList<AlarmObject> objects = getAllAlarms(p_Context);
+
+        if(p_AlarmObject.getID() == -1 || objects.size() <= p_AlarmObject.getID()) {
+            objects.add(p_AlarmObject);
+        }
+        else {
+            objects.set(p_AlarmObject.getID(), p_AlarmObject);
+        }
+
+        normalizeAlarmObjects(objects, p_AlarmObject);
+        saveAlarms(p_Context, objects);
+    }
+    private static void saveAlarms(Context p_Context, ArrayList<AlarmObject> p_AlarmObjects)
+    {
+        m_AlarmObjects = p_AlarmObjects;
+
+        SharedPreferences.Editor editor = getPrefEditor(p_Context);
+        editor.putString("alarms", getJsonFromAlarmObjects(p_AlarmObjects));
+        editor.apply();
+    }
+    private static String getJsonFromAlarmObjects(ArrayList<AlarmObject> p_Objects)
+    {
+        String res = "[";
+
+        for(int i = 0; i < p_Objects.size(); i++)
+        {
+            res += "{" +
+                    "\"id\" : " + p_Objects.get(i).getID() + ", " +
+                    "\"title\" : \"" + p_Objects.get(i).getTitle() + "\", " +
+                    "\"enabled\" : " + p_Objects.get(i).isEnabled() + ", " +
+                    "\"timeinmillis\" : " + p_Objects.get(i).getTimeInMS() + "}";
+
+            if(i < p_Objects.size() - 1) {
+                res += ",";
+            }
+        }
+
+        res += "]";
+
+        return res;
+    }
+    private static void normalizeAlarmObjects(ArrayList<AlarmObject> p_AlarmObjects, AlarmObject p_NewAlarm)
+    {
+        for(int i = 0; i < p_AlarmObjects.size(); i++)
+        {
+            p_AlarmObjects.get(i).setID(i);
+        }
+    }
+
+    public static ArrayList<AlarmObject> getAllAlarms(Context p_Context){
+        if(m_AlarmObjects == null)
+        {
+            SharedPreferences settings = getPrefSettings(p_Context);
+            String alarmObjectsJson = settings.getString("alarms", null);
+
+            m_AlarmObjects = getAlarmObjectsFromJson(alarmObjectsJson);
+        }
+
+        return m_AlarmObjects;
+    }
+    private static ArrayList<AlarmObject> getAlarmObjectsFromJson(String p_ObjectsJson)
+    {
+        ArrayList<AlarmObject> alarmObjects = new ArrayList<AlarmObject>();
+
+        if(p_ObjectsJson != null)
+        {
+            try {
+                JSONArray reader = new JSONArray(p_ObjectsJson);
+
+                for(int i = 0; i < reader.length(); i++)
+                {
+                    JSONObject alarm = reader.getJSONObject(i);
+                    alarmObjects.add(new AlarmObject(alarm.getInt("id"), alarm.getString("title"), alarm.getBoolean("enabled"), alarm.getLong("timeinmillis")));
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return alarmObjects;
+    }
+
 
     public static void addTime(Context p_Context, TimeObject p_TimeObject)
     {

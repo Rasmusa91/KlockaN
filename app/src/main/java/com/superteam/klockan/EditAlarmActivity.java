@@ -11,8 +11,10 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 /**
  * Created by oornmyr on 12/31/16.
@@ -36,6 +38,39 @@ public class EditAlarmActivity extends AppCompatActivity {
     private void initialize(){
         this.context = this;
 
+        final AlarmObject editObject = getEditObject();
+        generateTimeVariables(editObject);
+        initializePickers();
+
+        if(editObject != null){
+            ((TextView)findViewById(R.id.alarmTitle)).setText(editObject.getTitle());
+        }
+
+        findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveObject(editObject);
+            }
+        });
+        //TODO Deletebutton
+        ((Button) findViewById(R.id.cancelButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
+        updateTimeHeader();
+    }
+
+    private AlarmObject getEditObject()
+    {
+        int editID = getIntent().getExtras().getInt("editObjectID");
+        return (editID != -1 ? Preferences.getAllAlarms(getApplicationContext()).get(editID) : null);
+    }
+
+
+    private void initializePickers(){
         String[] stringHours = Utilities.getStringHours();
         String[] stringMinutes = Utilities.getStringMinutes();
         String[] stringAMPM = Utilities.getStringAMPM();
@@ -44,16 +79,20 @@ public class EditAlarmActivity extends AppCompatActivity {
         pickerHour.setMinValue(0);
         pickerHour.setMaxValue(stringHours.length - 1);
         pickerHour.setDisplayedValues(stringHours);
+        pickerHour.setValue(m_Hour);
 
         NumberPicker pickerMinute = (NumberPicker) findViewById(R.id.numberPickerMinute);
         pickerMinute.setMinValue(0);
         pickerMinute.setMaxValue(stringMinutes.length - 1);
         pickerMinute.setDisplayedValues(stringMinutes);
+        pickerMinute.setValue(m_Minute);
+
 
         NumberPicker pickerAMPM = (NumberPicker) findViewById(R.id.numberPickerAMPM);
         pickerAMPM.setMinValue(0);
         pickerAMPM.setMaxValue(stringAMPM.length - 1);
         pickerAMPM.setDisplayedValues(stringAMPM);
+        pickerAMPM.setValue((m_AMPM == Calendar.AM) ? 0 : 1);
 
         pickerHour.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
@@ -78,58 +117,47 @@ public class EditAlarmActivity extends AppCompatActivity {
                 updateTimeHeader();
             }
         });
+    }
 
-        ((Button) findViewById(R.id.cancelButton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    private void generateTimeVariables(AlarmObject p_EditObject)
+    {
+        Calendar c = Calendar.getInstance(Locale.getDefault());
+        if(p_EditObject != null)
+        {
+            c.setTimeInMillis(p_EditObject.getTimeInMS());
+        }
+        m_Hour = c.get(Calendar.HOUR) - 1;
+        m_Minute = c.get(Calendar.MINUTE);
+        m_AMPM = c.get(Calendar.AM_PM);
+    }
 
-        ((Button) findViewById(R.id.saveButton)).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //String title = ((TextView) findViewById(R.id.timeTitle)).getText().toString();
-                //Preferences.AddTime(getApplicationContext(), new TimeObject(-1, title));
+    private void saveObject(AlarmObject p_EditObject)
+    {
+        String title = ((TextView) findViewById(R.id.alarmTitle)).getText().toString();
+        boolean isEnabled = ((Switch) findViewById(R.id.enabledSwitch)).isChecked();
+        int hour = ((NumberPicker) findViewById(R.id.numberPickerHour)).getValue();
+        int minute = ((NumberPicker) findViewById(R.id.numberPickerMinute)).getValue();
+        int ampm = ((NumberPicker) findViewById(R.id.numberPickerAMPM)).getValue();
+        hour += 1;
+        ampm = (ampm == 0 ? Calendar.AM : Calendar.PM);
 
-                String title = ((TextView) findViewById(R.id.alarmTitle)).getText().toString();
-                boolean isDefault = ((Switch) findViewById(R.id.enabledSwitch)).isChecked();
-                int hour = ((NumberPicker) findViewById(R.id.numberPickerHour)).getValue();
-                int minute = ((NumberPicker) findViewById(R.id.numberPickerMinute)).getValue();
-                int ampm = ((NumberPicker) findViewById(R.id.numberPickerAMPM)).getValue();
-                hour += 1;
-                ampm = (ampm == 0 ? Calendar.AM : Calendar.PM);
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR, hour);
+        c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.AM_PM, ampm);
 
-                Calendar c = Calendar.getInstance();
-                c.set(Calendar.HOUR, hour);
-                c.set(Calendar.MINUTE, minute);
-                c.set(Calendar.SECOND, 0);
-                c.set(Calendar.AM_PM, ampm);
+        if(title == null){//Make sure there is a title
+            title = "";
+        }
+        int id = (p_EditObject != null ? p_EditObject.getID() : -1);
+        Preferences.addAlarm(getApplicationContext(), new AlarmObject(id, title, isEnabled, c.getTimeInMillis()));
 
-                //TODO Save this intent in order to cancel it later.
-                final Intent alarmIntent = new Intent(context, AlarmService.class);
-                alarmIntent.putExtra("message", title);
-                alarmIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_ALARM);
-                alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                PendingIntent pi = PendingIntent.getService(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
-                alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
+        Intent alarmServiceIntent = new Intent(this, AlarmService.class);
+        alarmServiceIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_SET_ALARMS);
+        this.startService(alarmServiceIntent);
 
-                /*
-                myIntent.putExtra("extra", "yes");
-                myIntent.putExtra("quote id", String.valueOf(richard_quote));
-                pending_intent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
-
-                setAlarmText("Alarm set to " + hour_string + ":" + minute_string);
-                */
-
-                finish();
-            }
-        });
-
-        updateTimeHeader();
+        Toast.makeText(getApplicationContext(), "Alarm saved", Toast.LENGTH_SHORT);
+        finish();
     }
 
     private void updateTimeHeader()

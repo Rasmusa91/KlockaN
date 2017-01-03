@@ -9,12 +9,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.superteam.klockan.TabAlarm">
 
-    <TextView
-        android:id="@+id/section_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text = "Alarm" />
-
+    <!--
     <ImageButton
         android:id="@+id/addAlarm"
         android:layout_width="wrap_content"
@@ -23,13 +18,26 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+-->
 
     <ListView
         android:id="@+id/alarmListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/addAlarm" />
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:background="#FF4081"
+        android:textSize="30dip"
+        android:textColor="#fff"
+        android:text="+"
+        android:layout_marginBottom="50dip"
+        android:layout_width="50dip"
+        android:layout_height="50dip"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:id="@+id/addAlarm" />
 
 </RelativeLayout>
