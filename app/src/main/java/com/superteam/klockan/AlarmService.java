@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class AlarmService extends Service {
     public void onCreate() {
         super.onCreate();
         Log.e("AlarmService", "OnCreate()");
+        initAlarms();
     }
 
     private void initAlarms(){
@@ -68,7 +70,9 @@ public class AlarmService extends Service {
 
         Intent editAlarmIntent = new Intent(this, EditAlarmActivity.class);
         editAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(editAlarmIntent);
+        //this.startActivity(editAlarmIntent);
+
+        TaskStackBuilder.create(this).addNextIntentWithParentStack(editAlarmIntent).startActivities();
     }
 
     @Override

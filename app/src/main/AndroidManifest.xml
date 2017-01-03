@@ -22,7 +22,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".EditTimeActivity"></activity>
-        <activity android:name=".EditAlarmActivity"></activity>
+
+        <activity
+            android:name=".EditAlarmActivity"
+            android:parentActivityName="com.superteam.klockan.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.superteam.klockan.MainActivity" />
+        </activity>
 
         <service
             android:name=".AlarmService"
