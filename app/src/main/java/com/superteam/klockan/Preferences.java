@@ -18,6 +18,7 @@ import java.util.ArrayList;
 public class Preferences
 {
     private static ArrayList<TimeObject> m_TimeObjects;
+    private static Callback m_DefaultTimeChangedCallback;
 
     private static SharedPreferences getPrefSettings(Context p_Context)
     {
@@ -60,7 +61,6 @@ public class Preferences
     {
         ArrayList<TimeObject> objects = getAllTimes(p_Context);
         objects.remove(p_TimeObject);
-        normalizeTimeObjects(objects, p_TimeObject);
 
         normalizeTimeObjects(objects, p_TimeObject);
         saveObjects(p_Context, objects);
