@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.superteam.klockan">
+    package="com.superteam.klockan"
+    android:installLocation="internalOnly">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -20,6 +23,18 @@
         </activity>
         <activity android:name=".EditTimeActivity"></activity>
         <activity android:name=".EditAlarmActivity"></activity>
-    </application>
 
+        <service
+            android:name=".AlarmService"
+            android:icon="@mipmap/ic_launcher"
+            android:label="AlarmService">
+        </service>
+
+        <receiver android:name="com.superteam.klockan.OnBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+    </application>
 </manifest>

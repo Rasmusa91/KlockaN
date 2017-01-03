@@ -1,11 +1,18 @@
 package com.superteam.klockan;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.NumberPicker;
+import android.widget.Switch;
 import android.widget.TextView;
+
+import java.util.Calendar;
 
 /**
  * Created by oornmyr on 12/31/16.
@@ -16,6 +23,8 @@ public class EditAlarmActivity extends AppCompatActivity {
     private int m_Minute;
     private int m_AMPM;
 
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,6 +34,8 @@ public class EditAlarmActivity extends AppCompatActivity {
     }
 
     private void initialize(){
+        this.context = this;
+
         String[] stringHours = Utilities.getStringHours();
         String[] stringMinutes = Utilities.getStringMinutes();
         String[] stringAMPM = Utilities.getStringAMPM();
@@ -80,6 +91,39 @@ public class EditAlarmActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //String title = ((TextView) findViewById(R.id.timeTitle)).getText().toString();
                 //Preferences.AddTime(getApplicationContext(), new TimeObject(-1, title));
+
+                String title = ((TextView) findViewById(R.id.alarmTitle)).getText().toString();
+                boolean isDefault = ((Switch) findViewById(R.id.enabledSwitch)).isChecked();
+                int hour = ((NumberPicker) findViewById(R.id.numberPickerHour)).getValue();
+                int minute = ((NumberPicker) findViewById(R.id.numberPickerMinute)).getValue();
+                int ampm = ((NumberPicker) findViewById(R.id.numberPickerAMPM)).getValue();
+                hour += 1;
+                ampm = (ampm == 0 ? Calendar.AM : Calendar.PM);
+
+                Calendar c = Calendar.getInstance();
+                c.set(Calendar.HOUR, hour);
+                c.set(Calendar.MINUTE, minute);
+                c.set(Calendar.SECOND, 0);
+                c.set(Calendar.AM_PM, ampm);
+
+
+                //TODO Save this intent in order to cancel it later.
+                final Intent alarmIntent = new Intent(context, AlarmService.class);
+                alarmIntent.putExtra("message", title);
+                alarmIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_ALARM);
+                PendingIntent pi = PendingIntent.getService(EditAlarmActivity.this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
+
+                /*
+                myIntent.putExtra("extra", "yes");
+                myIntent.putExtra("quote id", String.valueOf(richard_quote));
+                pending_intent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pending_intent);
+
+                setAlarmText("Alarm set to " + hour_string + ":" + minute_string);
+                */
 
                 finish();
             }

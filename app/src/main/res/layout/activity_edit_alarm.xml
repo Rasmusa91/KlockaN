@@ -65,7 +65,7 @@
                 android:layout_weight="1"
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="5dip"
-                android:id="@+id/useAsDefault"
+                android:id="@+id/enabledSwitch"
                 />
         </TableRow>
     </TableLayout>
