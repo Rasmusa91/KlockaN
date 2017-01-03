@@ -109,8 +109,8 @@ public class EditAlarmActivity extends AppCompatActivity {
                 //TODO Save this intent in order to cancel it later.
                 final Intent alarmIntent = new Intent(context, AlarmService.class);
                 alarmIntent.putExtra("message", title);
-
                 alarmIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_ALARM);
+                alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 PendingIntent pi = PendingIntent.getService(context, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                 AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                 alarmManager.set(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(), pi);
