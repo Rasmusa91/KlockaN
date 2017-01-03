@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         m_TimeHandler = new TimeHandler(new Callback() {
             @Override
-            public void onCallback() {
+            public void onCallback(Object o) {
                 m_TabTime.onTimeUpdated();
                 m_TabAlarm.onTimeUpdated();
                 m_TabStopwatch.onTimeUpdated();
@@ -102,21 +102,21 @@ public class MainActivity extends AppCompatActivity {
         m_ShakeHandler = new ShakeHandler(this, new Callback() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
-            public void onCallback() {
+            public void onCallback(Object o) {
                 readTime();
             }
         });
 
         Preferences.setDefaultTimeChangedCallback(new Callback() {
             @Override
-            public void onCallback() {
-                m_TabTime.onDefaultTimeChanged();
-                m_TabAlarm.onDefaultTimeChanged();
-                m_TabStopwatch.onDefaultTimeChanged();
+            public void onCallback(Object o) {
+                long timeDiffMS = (long) o;
+                m_TabTime.onDefaultTimeChanged(timeDiffMS);
+                m_TabAlarm.onDefaultTimeChanged(timeDiffMS);
+                m_TabStopwatch.onDefaultTimeChanged(timeDiffMS);
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -5,5 +5,5 @@ package com.superteam.klockan;
  */
 
 interface Callback {
-    void onCallback();
+    void onCallback(Object p_Parameter);
 }

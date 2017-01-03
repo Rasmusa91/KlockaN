@@ -270,7 +270,7 @@ public class Preferences
         {
             if(m_DefaultTimeChangedCallback != null)
             {
-                m_DefaultTimeChangedCallback.onCallback();
+                m_DefaultTimeChangedCallback.onCallback(currentLastTimeMS - p_LastTimeDiffMS);
             }
         }
     }

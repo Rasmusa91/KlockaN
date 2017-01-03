@@ -10,5 +10,5 @@ public abstract class TabFragment extends Fragment
 {
     public abstract void onTimeUpdated();
 
-    public abstract void onDefaultTimeChanged();
+    public abstract void onDefaultTimeChanged(long p_TimeDiffMS);
 }

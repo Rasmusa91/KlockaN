@@ -93,7 +93,7 @@ public class TabAlarm extends TabFragment
     }
 
     @Override
-    public void onDefaultTimeChanged()
+    public void onDefaultTimeChanged(long p_TimeDiffMS)
     {
     }
 }
