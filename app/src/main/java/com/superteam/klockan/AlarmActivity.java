@@ -64,7 +64,6 @@ public class AlarmActivity extends AppCompatActivity
         findViewById(R.id.backToTime).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_MediaPlayer.stop();
                 Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -74,7 +73,6 @@ public class AlarmActivity extends AppCompatActivity
         findViewById(R.id.backToAlarm).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                m_MediaPlayer.stop();
                 Intent intent = new Intent(getApplicationContext(), EditAlarmActivity.class);
                 intent.putExtra("editObjectID", getIntent().getIntExtra("alarmID", -1));
                 startActivity(intent);
@@ -125,5 +123,12 @@ public class AlarmActivity extends AppCompatActivity
     {
         ((Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(1000);
         ((TextView) findViewById(R.id.headerTime)).setText(Utilities.getDefaultTimeObject(getApplicationContext()).toString());
+    }
+
+    @Override
+    protected void onDestroy() {
+        m_MediaPlayer.stop();
+        ((Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE)).cancel();
+        super.onDestroy();
     }
 }
