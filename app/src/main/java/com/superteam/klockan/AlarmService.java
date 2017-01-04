@@ -24,6 +24,8 @@ public class AlarmService extends Service {
 
     private ArrayList<PendingIntent> pendingAlarmIntents = new ArrayList<>();
 
+
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -98,11 +100,12 @@ public class AlarmService extends Service {
         alarm.setEnabled(false);
         Preferences.addAlarm(getApplicationContext(), alarm);
 
-        Intent editAlarmIntent = new Intent(this, AlarmActivity.class);
-        editAlarmIntent.putExtra("editObjectID", id);
-        editAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent startAlarmIntent = new Intent(this, AlarmActivity.class);
+        startAlarmIntent.putExtra("alarmID", id);
+        startAlarmIntent.putExtra("alarmTitle", msg);
+        startAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        TaskStackBuilder.create(this).addNextIntentWithParentStack(editAlarmIntent).startActivities();
+        TaskStackBuilder.create(this).addNextIntentWithParentStack(startAlarmIntent).startActivities();
     }
 
     @Override

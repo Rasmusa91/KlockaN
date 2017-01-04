@@ -43,6 +43,7 @@ public class AlarmActivity extends AppCompatActivity
             }
         });
 
+        ((TextView) findViewById(R.id.alarmTitle)).setText(getIntent().getStringExtra("alarmTitle"));
         initializeButtons();
         initializeAnimation();
         initializeSound();
@@ -75,7 +76,7 @@ public class AlarmActivity extends AppCompatActivity
             public void onClick(View view) {
                 m_MediaPlayer.stop();
                 Intent intent = new Intent(getApplicationContext(), EditAlarmActivity.class);
-                intent.putExtra("editObjectID", getIntent().getExtras().getInt("id"));
+                intent.putExtra("editObjectID", getIntent().getIntExtra("alarmID", -1));
                 startActivity(intent);
                 finish();
             }
@@ -95,6 +96,7 @@ public class AlarmActivity extends AppCompatActivity
         }
 
         m_MediaPlayer = MediaPlayer.create(getApplicationContext(), alert);
+        m_MediaPlayer.setLooping(true);
         m_MediaPlayer.start();
     }
 
