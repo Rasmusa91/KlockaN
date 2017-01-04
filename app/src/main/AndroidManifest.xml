@@ -43,7 +43,7 @@
         </activity>
 
         <service
-            android:name=".AlarmService"
+            android:name=".BackgroundService"
             android:icon="@mipmap/ic_launcher"
             android:label="AlarmService"></service>
 
