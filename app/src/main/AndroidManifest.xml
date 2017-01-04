@@ -28,7 +28,8 @@
 
         <activity
             android:name=".EditAlarmActivity"
-            android:parentActivityName="com.superteam.klockan.MainActivity">
+            android:parentActivityName="com.superteam.klockan.MainActivity"
+            android:launchMode="standard">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.superteam.klockan.MainActivity" />

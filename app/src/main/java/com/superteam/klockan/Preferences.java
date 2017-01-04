@@ -1,15 +1,13 @@
 package com.superteam.klockan;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -60,6 +58,10 @@ public class Preferences
 
         normalizeAlarmObjects(objects, p_AlarmObject);
         saveAlarms(p_Context, objects);
+
+        Intent alarmServiceIntent = new Intent(p_Context, AlarmService.class);
+        alarmServiceIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_SET_ALARMS);
+        p_Context.startService(alarmServiceIntent);
     }
     private static void saveAlarms(Context p_Context, ArrayList<AlarmObject> p_AlarmObjects)
     {
@@ -130,6 +132,22 @@ public class Preferences
         }
 
         return alarmObjects;
+    }
+    public static void deleteAlarm(Context p_Context, AlarmObject p_AlarmObject)
+    {
+        Intent unsetAlarmIntent = new Intent(p_Context, AlarmService.class);
+        unsetAlarmIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_UNSET_ALARMS);
+        p_Context.startService(unsetAlarmIntent);
+
+        ArrayList<AlarmObject> objects = getAllAlarms(p_Context);
+        objects.remove(p_AlarmObject);
+
+        normalizeAlarmObjects(objects, p_AlarmObject);
+        saveAlarms(p_Context, objects);
+
+        Intent setAlarmIntent = new Intent(p_Context, AlarmService.class);
+        setAlarmIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_SET_ALARMS);
+        p_Context.startService(setAlarmIntent);
     }
 
 

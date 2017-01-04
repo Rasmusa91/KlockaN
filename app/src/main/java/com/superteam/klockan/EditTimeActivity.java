@@ -187,6 +187,7 @@ public class EditTimeActivity extends AppCompatActivity
         Calendar c = Calendar.getInstance();
         c.set(Calendar.HOUR, hour);
         c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
         c.set(Calendar.AM_PM, ampm);
 
         Calendar curr = Calendar.getInstance();

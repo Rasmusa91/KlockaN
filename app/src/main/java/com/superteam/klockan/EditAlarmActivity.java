@@ -1,9 +1,6 @@
 package com.superteam.klockan;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,7 +8,6 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -49,6 +45,8 @@ public class EditAlarmActivity extends AppCompatActivity {
         if(editObject != null){
             ((TextView)findViewById(R.id.alarmTitle)).setText(editObject.getTitle());
             ((Switch)findViewById(R.id.enabledSwitch)).setChecked(editObject.isEnabled());
+        }else{
+            ((Button)findViewById(R.id.deleteButton)).setVisibility(View.INVISIBLE);
         }
 
         findViewById(R.id.saveButton).setOnClickListener(new View.OnClickListener() {
@@ -57,8 +55,14 @@ public class EditAlarmActivity extends AppCompatActivity {
                 saveObject(editObject);
             }
         });
-        //TODO Deletebutton
-        ((Button) findViewById(R.id.cancelButton)).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.deleteButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Preferences.deleteAlarm(context, editObject);
+                finish();
+            }
+        });
+        findViewById(R.id.cancelButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -70,7 +74,7 @@ public class EditAlarmActivity extends AppCompatActivity {
 
     private AlarmObject getEditObject()
     {
-        int editID = getIntent().getExtras().getInt("editObjectID");
+        int editID = getIntent().getIntExtra("editObjectID", -1);
         return (editID != -1 ? Preferences.getAllAlarms(getApplicationContext()).get(editID) : null);
     }
 
@@ -130,6 +134,8 @@ public class EditAlarmActivity extends AppCompatActivity {
         if(p_EditObject != null)
         {
             c.setTimeInMillis(p_EditObject.getTimeInMS() + p_EditObject.getDefaultTimeOffset());
+        }else{
+            c.setTimeInMillis(c.getTimeInMillis() + Utilities.getCurrentTimeDiffMS(context));
         }
         m_Hour = c.get(Calendar.HOUR) - 1;
         m_Minute = c.get(Calendar.MINUTE);
@@ -151,6 +157,7 @@ public class EditAlarmActivity extends AppCompatActivity {
 
         c.set(Calendar.HOUR, hour);
         c.set(Calendar.MINUTE, minute);
+        c.set(Calendar.SECOND, 0);
         c.set(Calendar.AM_PM, ampm);
 
         c.setTimeInMillis(c.getTimeInMillis() - Utilities.getCurrentTimeDiffMS(this));
@@ -165,11 +172,6 @@ public class EditAlarmActivity extends AppCompatActivity {
         int id = (p_EditObject != null ? p_EditObject.getID() : -1);
         Preferences.addAlarm(getApplicationContext(), new AlarmObject(id, title, isEnabled, c.getTimeInMillis(), defaultOffset));
 
-        Intent alarmServiceIntent = new Intent(this, AlarmService.class);
-        alarmServiceIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_SET_ALARMS);
-        this.startService(alarmServiceIntent);
-
-        Toast.makeText(getApplicationContext(), "Alarm saved", Toast.LENGTH_SHORT);
         finish();
     }
 

@@ -76,6 +76,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true">
+
         <TableRow>
             <Button
                 android:text="Cancel"
@@ -92,17 +93,33 @@
                 />
 
             <Button
+                android:text="Delete"
+                android:textSize="20dip"
+                android:textColor="#fff"
+                android:background="#FF4081"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:gravity="center"
+                android:layout_marginRight="5dip"
+                android:layout_marginTop="5dip"
+                android:layout_marginBottom="5dip"
+                android:id="@+id/deleteButton"
+                android:visibility="visible" />
+
+            <Button
                 android:background="#FF4081"
                 android:textSize="20dip"
                 android:textColor="#fff"
                 android:text="Save"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:gravity="center"
                 android:layout_marginTop="5dip"
                 android:layout_marginBottom="5dip"
                 android:id="@+id/saveButton"
-                />
+                android:gravity="center" />
+        </TableRow>
+        <TableRow>
+
         </TableRow>
     </TableLayout>
 
