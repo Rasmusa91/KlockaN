@@ -4,6 +4,7 @@
     android:installLocation="internalOnly">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -23,13 +24,11 @@
         </activity>
         <activity
             android:name=".EditTimeActivity"
-            android:parentActivityName="com.superteam.klockan.MainActivity">
-        </activity>
-
+            android:parentActivityName=".MainActivity"></activity>
         <activity
             android:name=".EditAlarmActivity"
-            android:parentActivityName="com.superteam.klockan.MainActivity"
-            android:launchMode="standard">
+            android:launchMode="standard"
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.superteam.klockan.MainActivity" />
@@ -38,15 +37,16 @@
         <service
             android:name=".AlarmService"
             android:icon="@mipmap/ic_launcher"
-            android:label="AlarmService">
-        </service>
+            android:label="AlarmService"></service>
 
-        <receiver android:name="com.superteam.klockan.OnBootReceiver">
+        <receiver android:name=".OnBootReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
 
+        <activity android:name=".AlarmActivity"></activity>
     </application>
+
 </manifest>

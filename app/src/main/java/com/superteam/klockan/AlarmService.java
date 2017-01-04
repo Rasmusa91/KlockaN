@@ -98,7 +98,7 @@ public class AlarmService extends Service {
         alarm.setEnabled(false);
         Preferences.addAlarm(getApplicationContext(), alarm);
 
-        Intent editAlarmIntent = new Intent(this, EditAlarmActivity.class);
+        Intent editAlarmIntent = new Intent(this, AlarmActivity.class);
         editAlarmIntent.putExtra("editObjectID", id);
         editAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
