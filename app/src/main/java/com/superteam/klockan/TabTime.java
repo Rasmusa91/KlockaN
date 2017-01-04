@@ -77,6 +77,7 @@ public class TabTime extends TabFragment
     @Override
     public void onDefaultTimeChanged(long p_TimeDiffMS)
     {
+
     }
 
     private void initialize()

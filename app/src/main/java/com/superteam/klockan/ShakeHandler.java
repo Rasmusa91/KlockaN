@@ -48,7 +48,7 @@ public class ShakeHandler implements SensorEventListener
             float speed = Math.abs(x + y + z - m_LastX - m_LastY - m_LastZ) / diff * 10000;
 
             if (speed > SHAKE_THRESHOLD) {
-                m_Callback.onCallback();
+                m_Callback.onCallback(null);
             }
 
             m_LastX = x;

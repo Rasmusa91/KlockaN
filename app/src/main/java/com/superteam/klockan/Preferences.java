@@ -104,12 +104,12 @@ public class Preferences
             SharedPreferences settings = getPrefSettings(p_Context);
             String alarmObjectsJson = settings.getString("alarms", null);
 
-            m_AlarmObjects = getAlarmObjectsFromJson(alarmObjectsJson);
+            m_AlarmObjects = getAlarmObjectsFromJson(p_Context, alarmObjectsJson);
         }
 
         return m_AlarmObjects;
     }
-    private static ArrayList<AlarmObject> getAlarmObjectsFromJson(String p_ObjectsJson)
+    private static ArrayList<AlarmObject> getAlarmObjectsFromJson(Context p_Context, String p_ObjectsJson)
     {
         ArrayList<AlarmObject> alarmObjects = new ArrayList<AlarmObject>();
 
@@ -121,7 +121,7 @@ public class Preferences
                 for(int i = 0; i < reader.length(); i++)
                 {
                     JSONObject alarm = reader.getJSONObject(i);
-                    alarmObjects.add(new AlarmObject(alarm.getInt("id"), alarm.getString("title"), alarm.getBoolean("enabled"), alarm.getLong("timeinmillis")));
+                    alarmObjects.add(new AlarmObject(alarm.getInt("id"), alarm.getString("title"), alarm.getBoolean("enabled"), alarm.getLong("timeinmillis"), Utilities.getCurrentTimeDiffMS(p_Context)));
                 }
 
             } catch (JSONException e) {

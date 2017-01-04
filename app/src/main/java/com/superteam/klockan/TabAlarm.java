@@ -95,5 +95,9 @@ public class TabAlarm extends TabFragment
     @Override
     public void onDefaultTimeChanged(long p_TimeDiffMS)
     {
+        for(AlarmObject a : m_Items){
+            a.setDefaultTimeOffset(a.getDefaultTimeOffset() + p_TimeDiffMS);
+        }
+        m_Adapter.notifyDataSetChanged();
     }
 }

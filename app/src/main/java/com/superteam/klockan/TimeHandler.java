@@ -54,7 +54,7 @@ public class TimeHandler
                 if(msg.getData().containsKey("test"))
                 {
                     String text = msg.getData().getString("test");
-                    m_Callback.onCallback();
+                    m_Callback.onCallback(null);
                 }
 
                 return true;

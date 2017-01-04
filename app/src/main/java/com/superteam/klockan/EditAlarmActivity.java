@@ -25,6 +25,8 @@ public class EditAlarmActivity extends AppCompatActivity {
     private int m_Minute;
     private int m_AMPM;
 
+    private long defaultOffset = 0l;
+
     private Context context;
 
     @Override
@@ -37,6 +39,8 @@ public class EditAlarmActivity extends AppCompatActivity {
 
     private void initialize(){
         this.context = this;
+
+        this.defaultOffset = Utilities.getCurrentTimeDiffMS(getApplicationContext());
 
         final AlarmObject editObject = getEditObject();
         generateTimeVariables(editObject);
@@ -125,7 +129,7 @@ public class EditAlarmActivity extends AppCompatActivity {
         Calendar c = Calendar.getInstance(Locale.getDefault());
         if(p_EditObject != null)
         {
-            c.setTimeInMillis(p_EditObject.getTimeInMS());
+            c.setTimeInMillis(p_EditObject.getTimeInMS() + p_EditObject.getDefaultTimeOffset());
         }
         m_Hour = c.get(Calendar.HOUR) - 1;
         m_Minute = c.get(Calendar.MINUTE);
@@ -149,6 +153,8 @@ public class EditAlarmActivity extends AppCompatActivity {
         c.set(Calendar.MINUTE, minute);
         c.set(Calendar.AM_PM, ampm);
 
+        c.setTimeInMillis(c.getTimeInMillis() - Utilities.getCurrentTimeDiffMS(this));
+
         if(c.getTimeInMillis() <= currentTimeInMillis){
             c.add(Calendar.DAY_OF_MONTH, 1);
         }
@@ -157,7 +163,7 @@ public class EditAlarmActivity extends AppCompatActivity {
             title = "";
         }
         int id = (p_EditObject != null ? p_EditObject.getID() : -1);
-        Preferences.addAlarm(getApplicationContext(), new AlarmObject(id, title, isEnabled, c.getTimeInMillis()));
+        Preferences.addAlarm(getApplicationContext(), new AlarmObject(id, title, isEnabled, c.getTimeInMillis(), defaultOffset));
 
         Intent alarmServiceIntent = new Intent(this, AlarmService.class);
         alarmServiceIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_SET_ALARMS);

@@ -13,12 +13,15 @@ public class AlarmObject
     private boolean m_Enabled;
     private long m_TimeInMillis;
 
-    public AlarmObject(int p_ID, String p_Title, boolean p_Enabled, long p_TimeInMillis)
+    private long m_DefaultTimeOffset = 0;
+
+    public AlarmObject(int p_ID, String p_Title, boolean p_Enabled, long p_TimeInMillis, long p_DefaultTimeOffset)
     {
         m_ID = p_ID;
         m_Title = p_Title;
         m_Enabled = p_Enabled;
         m_TimeInMillis = p_TimeInMillis;
+        m_DefaultTimeOffset = p_DefaultTimeOffset;
     }
 
     public void setID(int p_ID)
@@ -51,6 +54,11 @@ public class AlarmObject
         return m_TimeInMillis;
     }
 
+    public void setDefaultTimeOffset(long offset){
+        m_DefaultTimeOffset = offset;
+    }
+    public long getDefaultTimeOffset(){return m_DefaultTimeOffset;}
+
     @Override
     public String toString()
     {
@@ -60,7 +68,7 @@ public class AlarmObject
     private String getTimeInText()
     {
         Calendar c = Calendar.getInstance();
-        c.setTimeInMillis(getTimeInMS());
+        c.setTimeInMillis(getTimeInMS() + m_DefaultTimeOffset);
         int hour = c.get(Calendar.HOUR);
         int minute = c.get(Calendar.MINUTE);
         int amPM = c.get(Calendar.AM_PM);

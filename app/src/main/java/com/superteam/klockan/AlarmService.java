@@ -4,14 +4,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
-import android.widget.NumberPicker;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -53,7 +49,6 @@ public class AlarmService extends Service {
                 alarmManager.cancel(pi);
 
                 if(alarm.isEnabled()){
-
                     alarmManager.set(AlarmManager.RTC_WAKEUP, alarm.getTimeInMS(), pi);
                 }
             }
