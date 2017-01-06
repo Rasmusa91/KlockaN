@@ -1,24 +1,7 @@
 package com.superteam.klockan;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
-import android.os.Build;
-import android.os.Handler;
-import android.os.Message;
-import android.speech.tts.TextToSpeech;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
@@ -27,19 +10,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,8 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     private TimeHandler m_TimeHandler;
-    private ShakeHandler m_ShakeHandler;
-    private TextToSpeechHandler m_TextToSpeechHandler;
     private TabFragment m_TabTime;
     private TabFragment m_TabAlarm;
     private TabFragment m_TabStopwatch;
@@ -71,10 +41,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Set up the alarmService
-        Intent alarmServiceIntent = new Intent(this, AlarmService.class);
-        alarmServiceIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_START_SERVICE);
-        this.startService(alarmServiceIntent);
+        //Set up the backgroundService
+        Intent backgroundServiceIntent = new Intent(this, BackgroundService.class);
+        backgroundServiceIntent.putExtra(BackgroundService.INTENT_EVENT_KEY, BackgroundService.EVENT_START_SERVICE);
+        this.startService(backgroundServiceIntent);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -99,15 +69,6 @@ public class MainActivity extends AppCompatActivity {
                 m_TabTime.onTimeUpdated();
                 m_TabAlarm.onTimeUpdated();
                 m_TabStopwatch.onTimeUpdated();
-            }
-        });
-
-        m_TextToSpeechHandler = new TextToSpeechHandler(getApplicationContext());
-        m_ShakeHandler = new ShakeHandler(this, new Callback() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-            @Override
-            public void onCallback(Object o) {
-                readTime();
             }
         });
 
@@ -196,11 +157,5 @@ public class MainActivity extends AppCompatActivity {
             }
             return null;
         }
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private void readTime()
-    {
-        m_TextToSpeechHandler.speak("The time is " + ((TabTime) m_TabTime).getCurrentTimeString());
     }
 }

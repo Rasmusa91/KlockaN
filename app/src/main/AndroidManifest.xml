@@ -34,8 +34,16 @@
                 android:value="com.superteam.klockan.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".AlarmActivity"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.superteam.klockan.MainActivity" />
+        </activity>
+
         <service
-            android:name=".AlarmService"
+            android:name=".BackgroundService"
             android:icon="@mipmap/ic_launcher"
             android:label="AlarmService"></service>
 
@@ -45,8 +53,6 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
-
-        <activity android:name=".AlarmActivity"></activity>
     </application>
 
 </manifest>

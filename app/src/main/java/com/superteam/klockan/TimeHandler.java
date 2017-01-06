@@ -20,7 +20,7 @@ public class TimeHandler
         private void sendMessage()
         {
             Bundle bundle = new Bundle();
-            bundle.putString("test", "test2");
+            bundle.putString("Update", "Update");
 
             Message message = new Message();
             message.setData(bundle);
@@ -51,9 +51,8 @@ public class TimeHandler
         handler = new Handler(new Handler.Callback() {
             @Override
             public boolean handleMessage(Message msg) {
-                if(msg.getData().containsKey("test"))
+                if(msg.getData().containsKey("Update"))
                 {
-                    String text = msg.getData().getString("test");
                     m_Callback.onCallback(null);
                 }
 
@@ -61,6 +60,6 @@ public class TimeHandler
             }
         });
 
-        new Thread(runnable, "Test thread").start();
+        new Thread(runnable, "TimeHandlerThread").start();
     }
 }

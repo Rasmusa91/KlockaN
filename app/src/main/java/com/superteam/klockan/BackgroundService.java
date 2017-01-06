@@ -4,8 +4,10 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.TaskStackBuilder;
 
 import java.util.ArrayList;
@@ -14,7 +16,7 @@ import java.util.ArrayList;
  * Created by oornmyr on 1/3/17.
  */
 
-public class AlarmService extends Service {
+public class BackgroundService extends Service {
 
     private final static int EVENT_UNKNOWN = 0;
     public final static int EVENT_START_SERVICE = 1, EVENT_ALARM = 2, EVENT_SET_ALARMS = 3, EVENT_UNSET_ALARMS = 4;
@@ -24,10 +26,22 @@ public class AlarmService extends Service {
 
     private ArrayList<PendingIntent> pendingAlarmIntents = new ArrayList<>();
 
+    private ShakeHandler m_ShakeHandler;
+    private TextToSpeechHandler m_TextToSpeechHandler;
+
     @Override
     public void onCreate() {
         super.onCreate();
         initAlarms(false);
+
+        m_TextToSpeechHandler = new TextToSpeechHandler(getApplicationContext());
+        m_ShakeHandler = new ShakeHandler(this, new Callback() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onCallback(Object o) {
+                readTime();
+            }
+        });
     }
 
     private void initAlarms(boolean forceUpdate){
@@ -37,9 +51,9 @@ public class AlarmService extends Service {
 
             ArrayList<AlarmObject> alarmList = Preferences.getAllAlarms(getApplicationContext());
             for (AlarmObject alarm : alarmList) {
-                Intent alarmIntent = new Intent(this, AlarmService.class);
+                Intent alarmIntent = new Intent(this, BackgroundService.class);
                 alarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                alarmIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_ALARM);
+                alarmIntent.putExtra(BackgroundService.INTENT_EVENT_KEY, BackgroundService.EVENT_ALARM);
                 alarmIntent.putExtra("message", alarm.getTitle());
                 alarmIntent.putExtra("alarm_id", alarm.getID());
 
@@ -98,11 +112,19 @@ public class AlarmService extends Service {
         alarm.setEnabled(false);
         Preferences.addAlarm(getApplicationContext(), alarm);
 
-        Intent editAlarmIntent = new Intent(this, AlarmActivity.class);
-        editAlarmIntent.putExtra("editObjectID", id);
-        editAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent startAlarmIntent = new Intent(this, AlarmActivity.class);
+        startAlarmIntent.putExtra("alarmID", id);
+        startAlarmIntent.putExtra("alarmTitle", msg);
+        startAlarmIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-        TaskStackBuilder.create(this).addNextIntentWithParentStack(editAlarmIntent).startActivities();
+        TaskStackBuilder.create(this).addNextIntentWithParentStack(startAlarmIntent).startActivities();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private void readTime()
+    {
+        String time = Utilities.getDefaultTimeObject(getApplicationContext()).toString();
+        m_TextToSpeechHandler.speak("The time is " + time);
     }
 
     @Override
@@ -115,10 +137,5 @@ public class AlarmService extends Service {
     @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
-
-    @Override
-    public boolean onUnbind(Intent intent) {
-        return super.onUnbind(intent);
     }
 }

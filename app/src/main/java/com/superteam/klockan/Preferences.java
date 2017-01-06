@@ -59,8 +59,8 @@ public class Preferences
         normalizeAlarmObjects(objects, p_AlarmObject);
         saveAlarms(p_Context, objects);
 
-        Intent alarmServiceIntent = new Intent(p_Context, AlarmService.class);
-        alarmServiceIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_SET_ALARMS);
+        Intent alarmServiceIntent = new Intent(p_Context, BackgroundService.class);
+        alarmServiceIntent.putExtra(BackgroundService.INTENT_EVENT_KEY, BackgroundService.EVENT_SET_ALARMS);
         p_Context.startService(alarmServiceIntent);
     }
     private static void saveAlarms(Context p_Context, ArrayList<AlarmObject> p_AlarmObjects)
@@ -135,8 +135,8 @@ public class Preferences
     }
     public static void deleteAlarm(Context p_Context, AlarmObject p_AlarmObject)
     {
-        Intent unsetAlarmIntent = new Intent(p_Context, AlarmService.class);
-        unsetAlarmIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_UNSET_ALARMS);
+        Intent unsetAlarmIntent = new Intent(p_Context, BackgroundService.class);
+        unsetAlarmIntent.putExtra(BackgroundService.INTENT_EVENT_KEY, BackgroundService.EVENT_UNSET_ALARMS);
         p_Context.startService(unsetAlarmIntent);
 
         ArrayList<AlarmObject> objects = getAllAlarms(p_Context);
@@ -145,8 +145,8 @@ public class Preferences
         normalizeAlarmObjects(objects, p_AlarmObject);
         saveAlarms(p_Context, objects);
 
-        Intent setAlarmIntent = new Intent(p_Context, AlarmService.class);
-        setAlarmIntent.putExtra(AlarmService.INTENT_EVENT_KEY, AlarmService.EVENT_SET_ALARMS);
+        Intent setAlarmIntent = new Intent(p_Context, BackgroundService.class);
+        setAlarmIntent.putExtra(BackgroundService.INTENT_EVENT_KEY, BackgroundService.EVENT_SET_ALARMS);
         p_Context.startService(setAlarmIntent);
     }
 

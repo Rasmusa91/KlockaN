@@ -31,13 +31,23 @@
             android:padding="20px"
             android:textSize="50dip" />
     </RelativeLayout>
-
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/header"
+        android:layout_centerHorizontal="true"
+        android:textSize="40dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/alarmTitle"
+        />
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/unnamed"
-        android:layout_centerVertical="true"
+        android:layout_centerVertical="false"
         android:layout_centerHorizontal="true"
+        android:layout_below="@id/alarmTitle"
+        android:layout_marginTop="20dp"
         android:id="@+id/alarmImage" />
     <TableLayout
         android:layout_width="fill_parent" android:layout_height="wrap_content"
