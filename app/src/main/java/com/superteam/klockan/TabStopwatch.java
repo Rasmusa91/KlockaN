@@ -1,7 +1,6 @@
 package com.superteam.klockan;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,16 +18,10 @@ import java.util.ArrayList;
 public class TabStopwatch extends TabFragment
 {
     private View m_View;
-    private String intNumbers[] = {"00","01","02","03","04","05","06","07","08","09","10","11","12","13","14",
-                        "15","16","17","18","19"};
-    private String txtSingleNumber[] = {"zero","one","two","three","four","five","six","seven","eight","nine",
-                            "ten","eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen",
-                            "eighteen","nineteen"};
-    private String txtTenNumbers[] = {"","","twenty", "thirty", "forty", "fifty", "sixty", "seventy", "eighty", "ninety"};
 
     private Button btnStart, btnPause, btnLap;
     private TextView txtTimer;
-    private Handler customHandler = new Handler();
+    private boolean allowTimeUpdates = false;
 
     private ArrayList<String> arrayList;
     private ListView listView;
@@ -38,22 +31,6 @@ public class TabStopwatch extends TabFragment
             timeInMilliseconds=0L,
             timeSwapBuff=0L,
             updateTime=0L;
-
-    Runnable updateTimerThread = new Runnable() {
-        @Override
-        public void run(){
-            timeInMilliseconds = SystemClock.uptimeMillis()-startTime;
-            updateTime = timeSwapBuff+timeInMilliseconds;
-            int milliseconds = (int) (updateTime%100);
-            int secs=(int)(updateTime/1000);
-            int mins=secs/60;
-            secs%=60;
-            txtTimer.setText(String.format("%02d",mins)+":"
-                            +String.format("%02d",secs)+":"
-                            +String.format("%02d",milliseconds));
-            customHandler.postDelayed(this,0);
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -82,12 +59,15 @@ public class TabStopwatch extends TabFragment
             public void onClick(View v) {
                 if(btnStart.getText() == "Start"){
                     startTime = SystemClock.uptimeMillis();
-                    customHandler.postDelayed(updateTimerThread,0);
+                    allowTimeUpdates = true;
                     btnStart.setText("Stop");
                 }
                 else if(btnStart.getText() == "Stop"){
-                    customHandler.removeCallbacks(updateTimerThread);
-                    txtTimer.setText(toText(txtTimer.getText().toString()));
+                    if(btnPause.getText() == "Pause"){
+                        onTimeUpdated();
+                        allowTimeUpdates = false;
+                        txtTimer.setText(toText(txtTimer.getText().toString()));
+                    }
                     btnStart.setText("Reset");
                 }
                 else {
@@ -113,11 +93,11 @@ public class TabStopwatch extends TabFragment
                         btnPause.setText("Unpause");
                         timeSwapBuff += timeInMilliseconds;
                         txtTimer.setText(toText(txtTimer.getText().toString()));
-                        customHandler.removeCallbacks(updateTimerThread);
+                        allowTimeUpdates = false;
                     } else {
                         btnPause.setText("Pause");
                         startTime = SystemClock.uptimeMillis();
-                        customHandler.postDelayed(updateTimerThread, 0);
+                        allowTimeUpdates = true;
                     }
                 }
             }
@@ -138,6 +118,11 @@ public class TabStopwatch extends TabFragment
 
     protected String toText(String txt){
         String txtString[] = txt.split(":");
+        String minute = Utilities.getStringMinutes()[Integer.parseInt(txtString[0])];
+        String second = Utilities.getStringMinutes()[Integer.parseInt(txtString[1])];
+        String hundreds = Utilities.getStringMinutes()[Integer.parseInt(txtString[2])];
+
+/*
         int checker = 0;
         for(int i = 0; i < 3; i++){     //loop 3 times to get hours/mins/secs/millisecs
             for(int j = 0; j < 20; j++){ //loop checks between 00-19
@@ -174,11 +159,24 @@ public class TabStopwatch extends TabFragment
             checker = 0;
         }
         return txtString[0]+":"+txtString[1]+":"+txtString[2];
+        */
+        return minute+":"+second+":"+hundreds;
     }
 
     @Override
     public void onTimeUpdated()
     {
+        if(allowTimeUpdates){
+            timeInMilliseconds = SystemClock.uptimeMillis()-startTime;
+            updateTime = timeSwapBuff+timeInMilliseconds;
+            int milliseconds = (int) (updateTime%100);
+            int secs=(int)(updateTime/1000);
+            int mins=secs/60;
+            secs%=60;
+            txtTimer.setText(String.format("%02d",mins)+":"
+                    +String.format("%02d",secs)+":"
+                    +String.format("%02d",milliseconds));
+        }
     }
 
     @Override

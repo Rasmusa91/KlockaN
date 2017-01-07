@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 public class TimeHandler
 {
-    final int FPS = 25;
+    final int FPS = 100;
     final int TICKS = 1000 / FPS;
 
     private Handler handler;
