@@ -127,7 +127,7 @@ public class TabStopwatch extends TabFragment
         btnLap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(btnStart.getText()!= "Reset" && btnStart.getText() != "Start") {
+                if(btnStart.getText()!= "Reset" && btnStart.getText() != "Start" && btnPause.getText() != "Unpause") {
                     arrayList.add(0, toText(txtTimer.getText().toString()));
                     adapter.notifyDataSetChanged();
                 }
