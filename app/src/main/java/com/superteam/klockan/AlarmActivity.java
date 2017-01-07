@@ -23,6 +23,7 @@ public class AlarmActivity extends AppCompatActivity
 {
     private TimeHandler m_TimeHandler;
     private MediaPlayer m_MediaPlayer;
+    private Vibrator m_Vibrator;
 
     @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     @Override
@@ -48,6 +49,7 @@ public class AlarmActivity extends AppCompatActivity
         initializeAnimation();
         initializeSound();
         initializeNotification();
+        initializeVibrator();
     }
 
     private void initializeAnimation()
@@ -119,16 +121,22 @@ public class AlarmActivity extends AppCompatActivity
         notificationManager.notify(0, n);
     }
 
+    private void initializeVibrator()
+    {
+        m_Vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        m_Vibrator.vibrate(new long[] {0, 200}, 0);
+    }
+
     private void onTimeHandlerUpdate()
     {
-        ((Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE)).vibrate(1000);
         ((TextView) findViewById(R.id.headerTime)).setText(Utilities.getDefaultTimeObject(getApplicationContext()).toString());
     }
 
     @Override
     protected void onDestroy() {
         m_MediaPlayer.stop();
-        ((Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE)).cancel();
+        m_Vibrator.cancel();
+
         super.onDestroy();
     }
 }
