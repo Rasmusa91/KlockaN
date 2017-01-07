@@ -121,45 +121,6 @@ public class TabStopwatch extends TabFragment
         String minute = Utilities.getStringMinutes()[Integer.parseInt(txtString[0])];
         String second = Utilities.getStringMinutes()[Integer.parseInt(txtString[1])];
         String hundreds = Utilities.getStringMinutes()[Integer.parseInt(txtString[2])];
-
-/*
-        int checker = 0;
-        for(int i = 0; i < 3; i++){     //loop 3 times to get hours/mins/secs/millisecs
-            for(int j = 0; j < 20; j++){ //loop checks between 00-19
-                if(txtString[i].equals(intNumbers[j])){
-                    txtString[i] = txtSingleNumber[j];
-                    checker = 1;
-                    j=20;
-                }
-            }
-            if(checker != 1) {
-                String nr[] = new String[2];
-                int tmp;
-                tmp = Integer.parseInt(txtString[i]);
-                nr[1] = ""+tmp%10;
-                nr[0] = ""+(tmp - Integer.parseInt(nr[1]))/10;
-                nr[1] = "0"+nr[1];
-                nr[0] = "0"+nr[0];
-
-                for(int j = 2; j < 10; j++){
-                    if(nr[0].equals(intNumbers[j])){
-                        txtString[i]=txtTenNumbers[j];
-                        j=10;
-                    }
-                }
-                if(nr[1].equals("00")) {
-                    for (int j = 0; j < 10; j++) {
-                        if (nr[1].equals(intNumbers[j])) {
-                            txtString[i] += "-" + txtSingleNumber[j];
-                            j = 10;
-                        }
-                    }
-                }
-            }
-            checker = 0;
-        }
-        return txtString[0]+":"+txtString[1]+":"+txtString[2];
-        */
         return minute+":"+second+":"+hundreds;
     }
 
